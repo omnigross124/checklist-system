@@ -40,8 +40,8 @@ if (isset($_SESSION['role'])) {
 
       <form class="form" action="login_process.php" method="POST">
         <div class="field">
-          <label>Email</label>
-          <input class="input" type="email" name="email" placeholder="you@example.com" required>
+          <label>Login ID</label>
+          <input class="input" type="text" name="login_id" placeholder="EMP101 / ADM101 / SUPER1" required>
         </div>
 
         <div class="field">

@@ -9,7 +9,12 @@ $name = $_SESSION['name'];
 $initial = strtoupper(substr($name,0,1));
 $admin_id = $_SESSION['user_id'];
 
-$stmt = $conn->prepare("SELECT id,name,email,status,created_at FROM users WHERE role='employee' AND parent_id=? ORDER BY id DESC");
+$stmt = $conn->prepare("
+    SELECT id, login_id, name, email, status, created_at
+    FROM users
+    WHERE parent_id=? AND role='employee'
+    ORDER BY id DESC
+");
 $stmt->bind_param("i", $admin_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -57,7 +62,7 @@ $result = $stmt->get_result();
     <div class="tablewrap">
       <table>
         <tr>
-          <th>ID</th><th>Name</th><th>Email</th><th>Status</th><th>Created</th>
+          <th>ID</th><th>Employee ID</th><th>Name</th><th>Email</th><th>Status</th><th>Created</th>
         </tr>
 
         <?php if($result->num_rows == 0): ?>
@@ -67,6 +72,7 @@ $result = $stmt->get_result();
         <?php while($row = $result->fetch_assoc()): ?>
           <tr>
             <td>#<?php echo $row['id']; ?></td>
+            <td><?php echo htmlspecialchars($row['login_id']); ?></td>
             <td><?php echo htmlspecialchars($row['name']); ?></td>
             <td><?php echo htmlspecialchars($row['email']); ?></td>
             <td>
@@ -74,7 +80,7 @@ $result = $stmt->get_result();
                 <span class="badge ok">active</span>
               <?php else: ?>
                 <span class="badge off">inactive</span>
-              <?php endif; ?>
+              <?php endif; ?> 
             </td>
             <td><?php echo htmlspecialchars($row['created_at']); ?></td>
           </tr>
