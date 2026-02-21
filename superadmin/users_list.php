@@ -66,7 +66,7 @@ $result = $conn->query("SELECT id,login_id,name,email,role,status,created_at FRO
               <?php if($row['status']=='active'): ?>
                 <span class="badge ok">active</span>
               <?php else: ?>
-                <span class="badge off">inactive</span>
+                <span class="badge off">inactivee</span>
               <?php endif; ?>
             </td>
             <td><?php echo $row['created_at']; ?></td>
