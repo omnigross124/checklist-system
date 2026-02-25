@@ -27,6 +27,25 @@ $employees = $empQuery->get_result();
 <head>
   <title>Employee Progress</title>
   <link rel="stylesheet" href="../assets/style.css">
+
+  <!-- ONLY ADDED: stacked progress bar style (matches your dark UI) -->
+  <style>
+    .progressTrack{
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,.35);
+      display:flex; /* IMPORTANT for stacked segments */
+    }
+    .progressSeg{ height:100%; }
+    .progressSeg.green{ background:#22c55e; }  /* YES */
+    .progressSeg.yellow{ background:#facc15; } /* NA */
+    .progressSeg.red{ background:#ef4444; }    /* NO */
+    .progressSeg.gray{ background: rgba(255,255,255,.18); } /* no data */
+  </style>
 </head>
 <body>
 
@@ -101,14 +120,46 @@ $qDone->bind_param("is",$emp_id,$today);
 $qDone->execute();
 $done = (int)$qDone->get_result()->fetch_assoc()['done'];
 
-/* Calculate % */
+/* Calculate % (KEEPING YOUR SAME LOGIC/TEXT) */
 $percent = ($assigned>0) ? round(($done/$assigned)*100) : 0;
 
-/* Color Logic */
-if($assigned==0) $barClass="gray";
-else if($percent < 50) $barClass="red";
-else if($percent < 80) $barClass="yellow";
-else $barClass="green";
+/* NEW: Count YES / NA / NO from today's report items */
+$yesCount = 0; $naCount = 0; $noCount = 0;
+
+$qItems = $conn->prepare("
+  SELECT LOWER(TRIM(ri.response)) AS resp, COUNT(*) AS c
+  FROM report_items ri
+  JOIN reports r ON r.id = ri.report_id
+  WHERE r.employee_id=? AND r.report_date=?
+  GROUP BY LOWER(TRIM(ri.response))
+");
+$qItems->bind_param("is", $emp_id, $today);
+$qItems->execute();
+$itemRes = $qItems->get_result();
+
+while($rr = $itemRes->fetch_assoc()){
+  $resp = $rr['resp'];
+  $c    = (int)$rr['c'];
+
+  if($resp === 'yes') $yesCount += $c;
+  else if($resp === 'no') $noCount += $c;
+  else if($resp === 'na' || $resp === 'n/a') $naCount += $c;
+  else {
+    // if something unexpected stored, treat it as NA
+    $naCount += $c;
+  }
+}
+
+$totalItems = $yesCount + $naCount + $noCount;
+
+if($totalItems > 0){
+  $yesPct = round(($yesCount / $totalItems) * 100, 2);
+  $naPct  = round(($naCount  / $totalItems) * 100, 2);
+  // avoid rounding issues so total becomes 100%
+  $noPct  = max(0, 100 - $yesPct - $naPct);
+} else {
+  $yesPct = 0; $naPct = 0; $noPct = 0;
+}
 ?>
 
 <tr>
@@ -120,9 +171,24 @@ else $barClass="green";
 </td>
 
 <td style="min-width:300px;">
-  <div class="progressTrack">
-    <div class="progressFill <?php echo $barClass; ?>" style="width:<?php echo $percent; ?>%;"></div>
+  <!-- UPDATED: stacked bar (green + yellow + red) -->
+  <div class="progressTrack" title="YES: <?php echo $yesCount; ?> | NA: <?php echo $naCount; ?> | NO: <?php echo $noCount; ?>">
+    <?php if($assigned==0 || $totalItems==0): ?>
+      <div class="progressSeg gray" style="width:100%;"></div>
+    <?php else: ?>
+      <?php if($yesPct > 0): ?>
+        <div class="progressSeg green" style="width:<?php echo $yesPct; ?>%;"></div>
+      <?php endif; ?>
+      <?php if($naPct > 0): ?>
+        <div class="progressSeg yellow" style="width:<?php echo $naPct; ?>%;"></div>
+      <?php endif; ?>
+      <?php if($noPct > 0): ?>
+        <div class="progressSeg red" style="width:<?php echo $noPct; ?>%;"></div>
+      <?php endif; ?>
+    <?php endif; ?>
   </div>
+
+  <!-- KEEPING YOUR SAME TEXT -->
   <small><?php echo $done; ?> / <?php echo $assigned; ?> done today (<?php echo $percent; ?>%)</small>
 </td>
 

@@ -30,6 +30,7 @@ $initial = strtoupper(substr($name,0,1));
         <b><?php echo htmlspecialchars($name); ?></b>
         <span>Role: Super Admin</span>
       </div>
+      <a class="btn settings" href="settings.php">⚙ Settings</a>
       <a class="btn danger" href="../logout.php">Logout</a>
     </div>
   </div>

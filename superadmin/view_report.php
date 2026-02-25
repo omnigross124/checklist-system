@@ -44,13 +44,39 @@ $info = $res->fetch_assoc();
 $itemStmt = $conn->prepare("SELECT task_item, response, comment FROM report_items WHERE report_id=? ORDER BY id ASC");
 $itemStmt->bind_param("i", $report_id);
 $itemStmt->execute();
-$items = $itemStmt->get_result();
+$itemsRes = $itemStmt->get_result();
+
+/* NEW: collect items + calculate YES/NA/NO counts */
+$items = [];
+$yesCount = 0;
+$naCount  = 0;
+$noCount  = 0;
+
+while($row = $itemsRes->fetch_assoc()){
+  $resp = strtolower(trim((string)$row['response']));
+
+  if($resp === 'yes') $yesCount++;
+  else if($resp === 'no') $noCount++;
+  else if($resp === 'na' || $resp === 'n/a') $naCount++;
+  else $naCount++; // treat unknown as NA
+
+  $items[] = $row;
+}
+
+$totalItems = $yesCount + $naCount + $noCount;
+if($totalItems > 0){
+  $yesPct = round(($yesCount / $totalItems) * 100, 2);
+  $naPct  = round(($naCount  / $totalItems) * 100, 2);
+  $noPct  = max(0, 100 - $yesPct - $naPct); // fix rounding gap
+} else {
+  $yesPct = $naPct = $noPct = 0;
+}
 
 function badgeFor($v){
-  $v = strtolower(trim($v));
+  $v = strtolower(trim((string)$v));
   if($v == 'yes') return 'ok';
   if($v == 'no') return 'off';
-  return 'warn';
+  return 'warn'; // NA
 }
 ?>
 <!DOCTYPE html>
@@ -103,11 +129,11 @@ function badgeFor($v){
           <th>Comment</th>
         </tr>
 
-        <?php if($items->num_rows==0): ?>
+        <?php if(count($items) == 0): ?>
           <tr><td colspan="3" style="color:var(--muted);">No report items found.</td></tr>
         <?php endif; ?>
 
-        <?php while($row = $items->fetch_assoc()): ?>
+        <?php foreach($items as $row): ?>
           <tr>
             <td><?php echo htmlspecialchars($row['task_item']); ?></td>
             <td>
@@ -117,8 +143,40 @@ function badgeFor($v){
             </td>
             <td style="color:var(--muted);"><?php echo nl2br(htmlspecialchars($row['comment'])); ?></td>
           </tr>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       </table>
+    </div>
+
+    <!-- NEW: Progress bar below report (uses your theme CSS in style.css) -->
+    <div class="progressCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <b class="pcTitle">Progress</b>
+        <span class="pcMeta">Total items: <?php echo $totalItems; ?></span>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="stackBar" title="YES: <?php echo $yesCount; ?> | NA: <?php echo $naCount; ?> | NO: <?php echo $noCount; ?>">
+
+          <?php if($yesPct > 0): ?>
+            <div class="seg yes" style="width:<?php echo $yesPct; ?>%"></div>
+          <?php endif; ?>
+
+          <?php if($naPct > 0): ?>
+            <div class="seg na" style="width:<?php echo $naPct; ?>%"></div>
+          <?php endif; ?>
+
+          <?php if($noPct > 0): ?>
+            <div class="seg no" style="width:<?php echo $noPct; ?>%"></div>
+          <?php endif; ?>
+
+        </div>
+
+        <div class="legend">
+          <span><span class="dot yes"></span> <b>YES</b>: <?php echo $yesCount; ?> (<?php echo round($yesPct); ?>%)</span>
+          <span><span class="dot na"></span> <b>NA</b>: <?php echo $naCount; ?> (<?php echo round($naPct); ?>%)</span>
+          <span><span class="dot no"></span> <b>NO</b>: <?php echo $noCount; ?> (<?php echo round($noPct); ?>%)</span>
+        </div>
+      </div>
     </div>
 
   </div>

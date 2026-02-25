@@ -52,6 +52,9 @@ if (isset($_SESSION['role'])) {
         <div class="actions">
           <button class="btn primary" type="submit">Login</button>
         </div>
+        <div style="margin-top:10px;">
+  <a class="link" href="forgot_password.php">Forgot password?</a>
+</div>
       </form>
 
       <p style="color:var(--muted);font-size:12px;margin-top:14px;">

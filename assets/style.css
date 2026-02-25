@@ -380,3 +380,344 @@ input[type="date"]{
 }
 .miniFill.pending{ width:10%; background: rgba(239,68,68,.75); } /* red */
 .miniFill.completed{ width:100%; background: rgba(34,197,94,.85); } /* green */
+/* ============================= */
+/* FIX: DARK PROGRESS CARD (SAFE) */
+/* paste at END of style.css      */
+/* ============================= */
+
+.progressCard{
+  background: linear-gradient(145deg, #0f1b2e, #0b1626) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  border-radius: 18px !important;
+  padding: 18px !important;
+  margin: 20px 0 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35) !important;
+}
+
+/* ONLY change title and small meta text inside progress card */
+.progressCard .pcTitle{
+  color:#e5e7eb !important;
+  font-weight:600;
+}
+
+.progressCard .pcMeta{
+  color: rgba(255,255,255,.65) !important;
+  font-size: 13px;
+}
+
+/* Track */
+.progressCard .stackBar{
+  height:14px !important;
+  border-radius:999px !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.08) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.5) !important;
+  display:flex !important;
+}
+
+/* Segments */
+.progressCard .seg{ height:100% !important; }
+.progressCard .seg.yes{ background:linear-gradient(90deg,#16a34a,#22c55e) !important; }
+.progressCard .seg.na { background:linear-gradient(90deg,#eab308,#facc15) !important; }
+.progressCard .seg.no { background:linear-gradient(90deg,#dc2626,#ef4444) !important; }
+
+/* Legend */
+.progressCard .legend{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-top:12px;
+  font-size:13px;
+  color:rgba(255,255,255,.75) !important;
+}
+
+.progressCard .legend b{
+  color:#ffffff !important;
+  font-weight:600;
+}
+
+.progressCard .dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
+  vertical-align:middle;
+}
+.progressCard .dot.yes{ background:#22c55e !important; }
+.progressCard .dot.na { background:#facc15 !important; }
+.progressCard .dot.no { background:#ef4444 !important; }
+/* ===== Sidebar Menu Styling ===== */
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #dcdcdc;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+/* Icon size */
+.sidebar a i {
+    font-size: 16px;
+}
+
+/* Hover effect */
+.sidebar a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+/* Active page highlight */
+.sidebar a.active {
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+/* Settings button - keep same .btn sizing/layout */
+.btn.settings{
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.btn.settings:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.25);
+}
+/* Keep dashboard height full so bottom area doesn't look empty */
+html, body{
+  height: 100%;
+}
+
+body{
+  min-height: 100vh;
+}
+
+.container{
+  min-height: calc(100vh - 64px);
+}
+.container{
+  padding-bottom: 40px;
+}
+
+
+body{
+  min-height: 100vh;
+  overflow-y: auto;   /* ✅ allow scrolling */
+  overflow-x: hidden;
+}
+/* ✅ FIX users_list table layout */
+.tablewrap {
+  width: 100%;
+  overflow: visible;   /* no inner scrolling */
+}
+
+/* Make table behave like a table (in case flex/block was applied somewhere) */
+.tablewrap table{
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.tablewrap tr{ display: table-row !important; }
+.tablewrap th, .tablewrap td{
+  display: table-cell !important;
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: var(--text);              /* ensures content is visible */
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+body { overflow-y: auto; }
+.tablewrap { overflow: auto; max-height: calc(100vh - 280px); }
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow-y: auto;  /* page handles scrolling */
+}
+/* =========================
+   MOBILE-FIRST FIX PACK
+   Paste at END of style.css
+   ========================= */
+
+/* 1) Kill sideways scroll site-wide */
+html, body{
+  width:100%;
+  max-width:100%;
+}
+body{
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+}
+
+/* 2) Make main wrappers fit mobile and wrap properly */
+.container{
+  width:100% !important;
+  max-width:1100px;
+  margin:18px auto !important;
+  padding:0 12px !important;
+}
+
+.topbar{
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px;
+}
+.userchip{
+  flex-wrap:wrap;
+}
+
+.pagehead{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+}
+.actions{
+  flex-wrap:wrap;
+}
+.actions .btn{
+  flex:1 1 auto;
+}
+
+/* 3) Long text (comments/remarks/emails) must wrap instead of pushing layout */
+.page, .card, .alert, td{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+/* 4) Tables: allow ONLY horizontal scroll (no vertical inner scrollbar) */
+.tablewrap{
+  width:100%;
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  -webkit-overflow-scrolling:touch;
+}
+table{
+  width:100%;
+  min-width:640px; /* smaller than 820 so mobile is better */
+}
+td{
+  max-width:220px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* 5) Forms: single column on mobile */
+.row{
+  grid-template-columns:1fr !important;
+}
+
+/* ====== Tablet/Desktop upgrades ====== */
+@media (min-width: 720px){
+  .container{ padding:0 16px !important; margin:28px auto !important; }
+  .topbar{ flex-direction:row; align-items:center; }
+  .pagehead{ flex-direction:row; align-items:flex-start; }
+  .row{ grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (min-width: 900px){
+  table{ min-width:820px; } /* keep your original desktop width */
+}
+/* ✅ MOBILE: always fill the full screen height */
+html, body{
+  height: 100%;
+}
+
+body{
+  min-height: 100svh;   /* mobile-safe viewport height */
+}
+
+/* ✅ Make your main wrapper stretch to bottom */
+.container{
+  min-height: calc(100svh - 32px); /* 32px = your top/bottom margin area */
+  padding-bottom: 24px;            /* keeps bottom spacing nice */
+}
+/* ===============================
+   iPhone Safari FIX: flicker + bottom white gap
+   Paste at END of style.css
+   =============================== */
+
+/* 1) Put background on a fixed layer (stops scroll repaint flicker) */
+body{
+  background: none !important;           /* remove bg from body */
+  min-height: 100svh;                    /* stable viewport unit */
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* fixed bg layer */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(91,140,255,.25), transparent 60%),
+              radial-gradient(900px 500px at 90% 20%, rgba(34,197,94,.18), transparent 55%),
+              var(--bg);
+}
+
+/* 2) Respect iPhone safe-area so content doesn't sit behind bottom bar */
+.container{
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+/* 3) Prevent that "white flash" during scroll bounce */
+html{
+  background: var(--bg);
+}
+/* ✅ STOP PAGE SIDE SCROLL */
+html, body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+}
+/* ✅ TABLE: only inner horizontal scroll */
+.tablewrap{
+  width:100%;
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  -webkit-overflow-scrolling: touch;
+}
+.tablewrap table{
+  width:max-content;
+  min-width:100%;
+}
+
+/* Mobile: don’t force 820px table */
+@media (max-width: 480px){
+  table{ min-width: 600px !important; }  /* or 520 if you want tighter */
+}
+/* ===========================
+   FIX: Enable vertical scroll everywhere
+   =========================== */
+
+html, body{
+  height:auto !important;
+  min-height:100% !important;
+}
+
+body{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+}
+
+/* Never lock scroll inside wrappers */
+.container,
+.page,
+.tablewrap{
+  height:auto !important;
+  max-height:none !important;
+  overflow-y:visible !important;
+}
