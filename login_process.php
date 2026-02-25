@@ -3,7 +3,7 @@ session_start();
 require_once "config/db.php";
 
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -12,7 +12,7 @@ $login_id = trim($_POST['login_id']);
 $password = trim($_POST['password']);
 
 if($login_id == "" || $password == ""){
-    header("Location: login.php?error=Enter Login ID and Password");
+    header("Location: index.php?error=Enter Login ID and Password");
     exit();
 }
 
@@ -23,7 +23,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
-    header("Location: login.php?error=Invalid ID or Password");
+    header("Location: index.php?error=Invalid ID or Password");
     exit();
 }
 
@@ -31,13 +31,13 @@ $user = $result->fetch_assoc();
 
 // 🔹 Check active status
 if ($user['status'] != 'active') {
-    header("Location: login.php?error=Account inactive. Contact Admin.");
+    header("Location: index.php?error=Account inactive. Contact Admin.");
     exit();
 }
 
 // 🔹 Plain password check (as you requested)
 if ($password != $user['password']) {
-    header("Location: login.php?error=Invalid ID or Password");
+    header("Location: index.php?error=Invalid ID or Password");
     exit();
 }
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['role']) || $_SESSION['role']!='employee'){
-  header("Location: ../login.php"); exit();
+  header("Location: ../index.php"); exit();
 }
 require_once "../config/db.php";
 date_default_timezone_set("Asia/Kolkata");

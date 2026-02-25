@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "config/db.php";
+require_once "config/app.php"; 
 require_once "mail_helper.php";
 
 $msg = "";
@@ -120,7 +121,7 @@ $reset_link = rtrim(APP_URL, '/') . "/reset_password.php?token=" . urlencode($to
 
         <div class="actions">
           <button class="btn primary" type="submit">Continue</button>
-          <a class="btn" href="login.php">Back to Login</a>
+          <a class="btn" href="index.php">Back to Login</a>
         </div>
       </form>
 

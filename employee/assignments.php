@@ -12,7 +12,7 @@ function getTodayReportId($conn,$emp,$task,$date){
 date_default_timezone_set('Asia/Kolkata');
 
 if(!isset($_SESSION['role']) || $_SESSION['role']!='employee'){
-  header("Location: ../login.php"); exit();
+  header("Location: ../index.php"); exit();
 }
 
 $emp_id = $_SESSION['user_id'];

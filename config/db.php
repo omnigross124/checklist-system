@@ -1,9 +1,9 @@
 <?php
 date_default_timezone_set("Asia/Kolkata");
 $host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "checklist_system";
+$user = "u760048928_isha";
+$pass = "Ish@db@1212";
+$db   = "u760048928_ishadb";
 
 $conn = new mysqli($host, $user, $pass, $db);
 

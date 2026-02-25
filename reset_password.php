@@ -93,7 +93,7 @@ if ($showForm && $_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
       <?php else: ?>
         <div class="actions">
-          <a class="btn primary" href="login.php">Back to Login</a>
+          <a class="btn primary" href="index.php">Back to Login</a>
         </div>
       <?php endif; ?>
 

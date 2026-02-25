@@ -4,7 +4,7 @@ require_once "../config/db.php"; // if you place this inside admin/ or superadmi
 require_once "../mail_helper.php";
 
 if (!isset($_SESSION['role'], $_SESSION['user_id'])) {
-  header("Location: ../login.php"); exit();
+  header("Location: ../index.php"); exit();
 }
 
 $target_id = (int)($_GET['id'] ?? 0);

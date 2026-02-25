@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['role']) || $_SESSION['role'] != 'super_admin'){
-  header("Location: ../login.php"); exit();
+  header("Location: ../index.php"); exit();
 }
 $name = $_SESSION['name'];
 $initial = strtoupper(substr($name,0,1));
